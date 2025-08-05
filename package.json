@@ -1,0 +1,16 @@
+{
+  "name": "my-contacts",
+  "version": "1.0.0",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch ."
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.1.2",
+    "ultracite": "5.1.2"
+  }
+}
