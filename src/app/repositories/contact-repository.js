@@ -28,11 +28,30 @@ class ContactRepository {
     )
   }
 
+  findByEmail(email) {
+    return new Promise((resolve, _reject) =>
+      resolve(contacts.find((user) => user.email === email))
+    )
+  }
+
   delete(id) {
     return new Promise((resolve, _reject) => {
       contacts = contacts.filter((contact) => contact.id !== id)
 
       resolve()
+    })
+  }
+
+  create(data) {
+    return new Promise((resolve, _reject) => {
+      const newContact = {
+        id: randomUUID(),
+        ...data,
+      }
+
+      contacts.push(newContact)
+
+      resolve(newContact)
     })
   }
 }
