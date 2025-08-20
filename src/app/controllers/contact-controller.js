@@ -7,8 +7,17 @@ class ContactController {
     response.status(200).json(contacts)
   }
 
-  show() {
-    // Obter UM registro
+  async show(request, response) {
+    const { id } = request.params
+
+    const contact = await contactRepository.findById(id)
+
+    if (!contact) {
+      // 404: Not Found
+      return response.status(404).json({ error: 'User not found' })
+    }
+
+    response.status(200).json(contact)
   }
 
   store() {
