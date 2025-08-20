@@ -1,7 +1,10 @@
+import { contactRepository } from '../repositories/contact-repository.js'
+
 class ContactController {
-  index(_request, response) {
-    // Listar todos os registros
-    response.send('Send from Contact Controller')
+  async index(_request, response) {
+    const contacts = await contactRepository.findAll()
+
+    response.status(200).json(contacts)
   }
 
   show() {
