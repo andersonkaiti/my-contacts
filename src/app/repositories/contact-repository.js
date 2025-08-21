@@ -54,6 +54,21 @@ class ContactRepository {
       resolve(newContact)
     })
   }
+
+  update(id, data) {
+    return new Promise((resolve, _reject) => {
+      const updatedContact = {
+        id,
+        ...data,
+      }
+
+      contacts = contacts.map((contact) =>
+        contact.id === id ? updatedContact : contact
+      )
+
+      resolve(updatedContact)
+    })
+  }
 }
 
 export const contactRepository = new ContactRepository()
