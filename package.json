@@ -4,10 +4,11 @@
   "main": "src/server.js",
   "type": "module",
   "scripts": {
-    "dev": "node --watch ."
+    "dev": "node --env-file=.env --watch ."
   },
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "pg": "^8.16.3"
   },
   "devDependencies": {
     "@biomejs/biome": "2.1.2",
