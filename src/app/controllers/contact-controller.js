@@ -1,8 +1,10 @@
 import { contactRepository } from '../repositories/contact-repository.js'
 
 class ContactController {
-  async index(_request, response) {
-    const contacts = await contactRepository.findAll()
+  async index(request, response) {
+    const { orderBy } = request.query
+
+    const contacts = await contactRepository.findAll(orderBy)
 
     response.status(200).json(contacts)
   }
