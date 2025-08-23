@@ -25,10 +25,18 @@ class ContactRepository {
     return rows
   }
 
-  findById(id) {
-    return new Promise((resolve, _reject) =>
-      resolve(contacts.find((user) => user.id === id))
+  async findById(id) {
+    const [row] = await db.query(
+      `
+        SELECT * FROM
+          contacts
+        WHERE
+          id = $1
+      `,
+      [id]
     )
+
+    return row
   }
 
   findByEmail(email) {
