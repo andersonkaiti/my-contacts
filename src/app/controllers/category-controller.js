@@ -53,6 +53,14 @@ class CategoryController {
 
     response.status(200).json(category)
   }
+
+  async delete(request, response) {
+    const { id } = request.params
+
+    await categoryRepository.delete(id)
+
+    response.sendStatus(204)
+  }
 }
 
 export const categoryController = new CategoryController()

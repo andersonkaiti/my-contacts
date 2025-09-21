@@ -61,6 +61,20 @@ class CategoryRepository {
 
     return row
   }
+
+  async delete(id) {
+    const deleteOp = await db.query(
+      `
+        DELETE FROM
+          categories
+        WHERE
+          id = $1
+      `,
+      [id]
+    )
+
+    return deleteOp
+  }
 }
 
 export const categoryRepository = new CategoryRepository()
