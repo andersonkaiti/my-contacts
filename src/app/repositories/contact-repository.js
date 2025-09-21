@@ -5,10 +5,16 @@ class ContactRepository {
     const direction = orderBy.toUpperCase() === 'DESC' ? 'DESC' : 'ASC'
 
     const rows = await db.query(`
-      SELECT * FROM
+      SELECT
+        contacts.*, categories.name AS category_name
+      FROM
         contacts
+      LEFT JOIN
+        categories
+      ON
+        categories.id = contacts.category_id
       ORDER BY
-        name
+        contacts.name
       ${direction}
     `)
 
@@ -18,10 +24,18 @@ class ContactRepository {
   async findById(id) {
     const [row] = await db.query(
       `
-        SELECT * FROM
+        SELECT
+          contacts.*, categories.name AS category_name
+        FROM
           contacts
+        LEFT JOIN
+          categories
+        ON
+          categories.id = contacts.category_id
         WHERE
-          id = $1
+          contacts.id = $1
+        ORDER BY
+          contacts.name
       `,
       [id]
     )
