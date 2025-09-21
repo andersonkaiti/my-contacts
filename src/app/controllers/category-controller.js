@@ -7,6 +7,18 @@ class CategoryController {
     response.status(200).json(categories)
   }
 
+  async show(request, response) {
+    const { id } = request.params
+
+    const category = await categoryRepository.findById(id)
+
+    if (!category) {
+      return response.status(404).json({ error: 'Category not found' })
+    }
+
+    response.status(200).json(category)
+  }
+
   async store(request, response) {
     const { name } = request.body
 

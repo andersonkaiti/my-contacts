@@ -11,6 +11,7 @@ router.post('/contacts', contactController.store)
 router.put('/contacts/:id', contactController.update)
 
 router.get('/categories', categoryController.index)
+router.get('/categories/:id', categoryController.show)
 router.post('/categories', categoryController.store)
 
 export { router }

@@ -14,6 +14,22 @@ class CategoryRepository {
     return rows
   }
 
+  async findById(id) {
+    const rows = await db.query(
+      `
+        SELECT * FROM
+          categories
+        WHERE
+          id = $1
+        ORDER BY
+          name
+      `,
+      [id]
+    )
+
+    return rows
+  }
+
   async create({ name }) {
     const [row] = await db.query(
       `
