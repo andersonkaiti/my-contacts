@@ -1,22 +1,4 @@
-import { randomUUID } from 'node:crypto'
 import { db } from '../../database/index.js'
-
-let contacts = [
-  {
-    id: randomUUID(),
-    name: 'Anderson',
-    email: 'anderkaiti@gmail.com',
-    phone: '123123123',
-    category_id: randomUUID(),
-  },
-  {
-    id: randomUUID(),
-    name: 'José',
-    email: 'jose@gmail.com',
-    phone: '321321321',
-    category_id: randomUUID(),
-  },
-]
 
 class ContactRepository {
   async findAll(orderBy = 'ASC') {
@@ -102,12 +84,18 @@ class ContactRepository {
     return row
   }
 
-  delete(id) {
-    return new Promise((resolve, _reject) => {
-      contacts = contacts.filter((contact) => contact.id !== id)
+  async delete(id) {
+    const deleteOp = await db.query(
+      `
+        DELETE FROM
+          contacts
+        WHERE
+          id = $1
+      `,
+      [id]
+    )
 
-      resolve()
-    })
+    return deleteOp
   }
 }
 
