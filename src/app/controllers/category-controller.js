@@ -1,6 +1,12 @@
 import { categoryRepository } from '../repositories/category-repository.js'
 
 class CategoryController {
+  async index(_request, response) {
+    const categories = await categoryRepository.findAll()
+
+    response.status(200).json(categories)
+  }
+
   async store(request, response) {
     const { name } = request.body
 
