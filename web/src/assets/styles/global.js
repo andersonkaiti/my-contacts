@@ -12,6 +12,7 @@ export const GlobalStyle = createGlobalStyle`
     body {
       background-color: ${theme.colors.background};
       font-size: 16px;
+      color: ${theme.colors.gray[900]};
     }
 
     button {
