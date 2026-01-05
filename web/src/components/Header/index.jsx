@@ -1,7 +1,7 @@
 import logo from '../../assets/images/logo.svg'
 import { Container, InputSearchContainer } from './styles'
 
-export default function Header() {
+export function Header() {
   return (
     <Container>
       <img src={logo} alt="MyContacts" width="201" />

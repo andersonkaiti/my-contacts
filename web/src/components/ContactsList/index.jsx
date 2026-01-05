@@ -3,7 +3,7 @@ import edit from '../../assets/images/icons/edit.svg'
 import trash from '../../assets/images/icons/trash.svg'
 import { Card, Container, Header, ListContainer } from './styles'
 
-export default function ContactsList() {
+export function ContactsList() {
   return (
     <Container>
       <Header>
