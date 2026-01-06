@@ -1,10 +1,10 @@
 import { Button } from '../Button'
 import { Container, Footer, Overlay } from './styles'
 
-export function Modal() {
+export function Modal({ danger = false }) {
   return (
     <Overlay>
-      <Container>
+      <Container danger={danger}>
         <h1>Título do modal</h1>
         <p>Corpo do modal</p>
 
@@ -13,7 +13,9 @@ export function Modal() {
             Cancelar
           </button>
 
-          <Button type="button">Deletar</Button>
+          <Button type="button" danger={danger}>
+            Deletar
+          </Button>
         </Footer>
       </Container>
     </Overlay>

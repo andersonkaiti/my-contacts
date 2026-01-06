@@ -8,7 +8,7 @@ import { Card, Container, Header, InputSearchContainer, ListContainer } from './
 export function Home() {
   return (
     <Container>
-      <Modal />
+      <Modal danger />
 
       <InputSearchContainer>
         <input type="text" placeholder="Pesquisar contato..." />
