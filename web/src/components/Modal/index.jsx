@@ -1,8 +1,10 @@
+import { createPortal } from 'react-dom'
 import { Button } from '../Button'
 import { Container, Footer, Overlay } from './styles'
 
 export function Modal({ danger = false }) {
-  return (
+  // o createPortal permite renderizar um elemento em um local diferente do DOM. Como primeiro argumento ele espera o elemento que vai ser renderizado e como segundo argumento ele espera o local onde vai ser renderizado
+  return createPortal(
     <Overlay>
       <Container danger={danger}>
         <h1>Título do modal</h1>
@@ -18,6 +20,7 @@ export function Modal({ danger = false }) {
           </Button>
         </Footer>
       </Container>
-    </Overlay>
+    </Overlay>,
+    document.body,
   )
 }
