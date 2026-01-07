@@ -10,6 +10,19 @@ export function ContactForm({ buttonLabel }) {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [category, setCategory] = useState('')
+  const [errors, setErrors] = useState([])
+
+  function handleNameChange(event) {
+    setName(event.target.value)
+
+    if (!event.target.value) {
+      setErrors((prevState) => [...prevState, { field: 'name', message: 'Nome é obrigatório' }])
+    } else {
+      setErrors((prevState) => prevState.filter((error) => error.field !== 'name'))
+    }
+  }
+
+  console.log(errors)
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -22,14 +35,10 @@ export function ContactForm({ buttonLabel }) {
     })
   }
 
-  // form.addEventListener('submit', function (event) {})
-
-  // O comportamento padrão do form é enviar os dados via query params para a URL que está no atributo action e recarregar a página. Caso a action não seja definida, ele envia para a URL atual e recarrega a página. Para prevenir isso, é necessário utilizar o event.preventDefault()
-
   return (
     <Form onSubmit={handleSubmit}>
       <FormGroup>
-        <Input placeholder="Nome" value={name} onChange={(event) => setName(event.target.value)} />
+        <Input placeholder="Nome" value={name} onChange={handleNameChange} />
       </FormGroup>
 
       <FormGroup>
