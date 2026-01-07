@@ -1,28 +1,43 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Button } from '../Button'
 import { FormGroup } from '../FormGroup'
 import { Input } from '../Input'
 import { Select } from '../Select'
 import { ButtonContainer, Form } from './styles'
 
-// Controlled components: todo o fluxo de informação e renderização depende do React
-// A partir do momento em que a prop value é usada, o componente se torna controlado
+// Uncontrolled components: todo o fluxo de informação e renderização depende da DOM
 
 export function ContactForm({ buttonLabel }) {
-  // one-way data binding = o estado é a única fonte de verdade
   const [name, setName] = useState('')
 
-  // Ainda que ele re-renderize toda vez, o custo é mínimo por conta do algoritmo de reconciliação, que só atualiza os pontos que mudaram
+  // O React tem acesso ao virtual DOM, e não ao DOM real. Com o .getElementById(), o DOM real é acessado e alterado e, consequentemente, o virtual DOM e o DOM real se desincronizam
+  // const emailInput = document.getElementById('input-email')
+  const emailInput = useRef(null)
+
+  function handleClick() {
+    console.log(emailInput.current.value)
+  }
+
   console.log('rendered')
 
   return (
     <Form>
+      <button type="button" onClick={handleClick}>
+        Loga emailInput
+      </button>
+
       <FormGroup>
         <Input placeholder="Nome" value={name} onChange={(event) => setName(event.target.value)} />
       </FormGroup>
 
-      <FormGroup error="O formato do e-mail é inválido.">
-        <Input placeholder="E-mail" error />
+      <FormGroup>
+        <Input
+          placeholder="E-mail"
+          defaultValue="anderkaiti@gmail.com"
+          ref={emailInput}
+          // É possível utilizar eventos em uncontrolled components sem causar re-renderização, pois quem causa ela é o estado
+          onChange={(event) => console.log(event.target.value)}
+        />
       </FormGroup>
 
       <FormGroup>
