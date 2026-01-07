@@ -1,52 +1,50 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { Button } from '../Button'
 import { FormGroup } from '../FormGroup'
 import { Input } from '../Input'
 import { Select } from '../Select'
 import { ButtonContainer, Form } from './styles'
 
-// Uncontrolled components: todo o fluxo de informação e renderização depende da DOM
-
 export function ContactForm({ buttonLabel }) {
   const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
+  const [category, setCategory] = useState('')
 
-  // O React tem acesso ao virtual DOM, e não ao DOM real. Com o .getElementById(), o DOM real é acessado e alterado e, consequentemente, o virtual DOM e o DOM real se desincronizam
-  // const emailInput = document.getElementById('input-email')
-  const emailInput = useRef(null)
+  function handleSubmit(event) {
+    event.preventDefault()
 
-  function handleClick() {
-    console.log(emailInput.current.value)
+    console.log({
+      name,
+      email,
+      phone,
+      category,
+    })
   }
 
-  console.log('rendered')
+  // form.addEventListener('submit', function (event) {})
+
+  // O comportamento padrão do form é enviar os dados via query params para a URL que está no atributo action e recarregar a página. Caso a action não seja definida, ele envia para a URL atual e recarrega a página. Para prevenir isso, é necessário utilizar o event.preventDefault()
 
   return (
-    <Form>
-      <button type="button" onClick={handleClick}>
-        Loga emailInput
-      </button>
-
+    <Form onSubmit={handleSubmit}>
       <FormGroup>
         <Input placeholder="Nome" value={name} onChange={(event) => setName(event.target.value)} />
       </FormGroup>
 
       <FormGroup>
-        <Input
-          placeholder="E-mail"
-          defaultValue="anderkaiti@gmail.com"
-          ref={emailInput}
-          // É possível utilizar eventos em uncontrolled components sem causar re-renderização, pois quem causa ela é o estado
-          onChange={(event) => console.log(event.target.value)}
-        />
+        <Input placeholder="E-mail" value={email} onChange={(event) => setEmail(event.target.value)} />
       </FormGroup>
 
       <FormGroup>
-        <Input placeholder="Telefone" />
+        <Input placeholder="Telefone" value={phone} onChange={(event) => setPhone(event.target.value)} />
       </FormGroup>
 
       <FormGroup>
-        <Select>
+        <Select value={category} onChange={(event) => setCategory(event.target.value)}>
+          <option value="">Categoria</option>
           <option value="instagram">Instagram</option>
+          <option value="discord">Discord</option>
         </Select>
       </FormGroup>
 
