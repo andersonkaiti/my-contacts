@@ -2,7 +2,13 @@ import { Link } from 'react-router-dom'
 import arrow from '../../assets/images/icons/arrow.svg'
 import edit from '../../assets/images/icons/edit.svg'
 import trash from '../../assets/images/icons/trash.svg'
-import { Card, Container, Header, InputSearchContainer, ListContainer } from './styles'
+import {
+  Card,
+  Container,
+  Header,
+  InputSearchContainer,
+  ListContainer,
+} from './styles'
 
 export function Home() {
   return (
