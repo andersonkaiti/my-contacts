@@ -13,6 +13,7 @@ export const Input = styled.input`
     padding: 0 16px;
     font-size: 16px;
     transition: border-color .2s ease-in;
+    appearance: none;
 
     &:focus {
       border-color: ${theme.colors.primary.main};
