@@ -17,9 +17,14 @@ export function ContactForm({ buttonLabel }) {
     setName(event.target.value)
 
     if (!event.target.value) {
-      setErrors((prevState) => [...prevState, { field: 'name', message: 'Nome é obrigatório' }])
+      setErrors((prevState) => [
+        ...prevState,
+        { field: 'name', message: 'Nome é obrigatório' },
+      ])
     } else {
-      setErrors((prevState) => prevState.filter((error) => error.field !== 'name'))
+      setErrors((prevState) =>
+        prevState.filter((error) => error.field !== 'name'),
+      )
     }
   }
 
@@ -32,14 +37,21 @@ export function ContactForm({ buttonLabel }) {
       const errorAlreadyExists = errors.find((error) => error.field === 'email')
 
       if (!errorAlreadyExists) {
-        setErrors((prevState) => [...prevState, { field: 'email', message: 'E-mail inválido' }])
+        setErrors((prevState) => [
+          ...prevState,
+          { field: 'email', message: 'E-mail inválido' },
+        ])
       }
     } else {
-      setErrors((prevState) => prevState.filter((error) => error.field !== 'email'))
+      setErrors((prevState) =>
+        prevState.filter((error) => error.field !== 'email'),
+      )
     }
   }
 
-  console.log(errors)
+  function getErrorMessageByFieldName(fieldName) {
+    return errors.find((error) => error.field === fieldName)?.message
+  }
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -54,20 +66,37 @@ export function ContactForm({ buttonLabel }) {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <FormGroup>
-        <Input placeholder="Nome" value={name} onChange={handleNameChange} />
+      <FormGroup error={getErrorMessageByFieldName('name')}>
+        <Input
+          placeholder="Nome"
+          value={name}
+          onChange={handleNameChange}
+          error={getErrorMessageByFieldName('name')}
+        />
+      </FormGroup>
+
+      <FormGroup error={getErrorMessageByFieldName('email')}>
+        <Input
+          placeholder="E-mail"
+          value={email}
+          onChange={handleEmailChange}
+          error={getErrorMessageByFieldName('email')}
+        />
       </FormGroup>
 
       <FormGroup>
-        <Input placeholder="E-mail" value={email} onChange={handleEmailChange} />
+        <Input
+          placeholder="Telefone"
+          value={phone}
+          onChange={(event) => setPhone(event.target.value)}
+        />
       </FormGroup>
 
       <FormGroup>
-        <Input placeholder="Telefone" value={phone} onChange={(event) => setPhone(event.target.value)} />
-      </FormGroup>
-
-      <FormGroup>
-        <Select value={category} onChange={(event) => setCategory(event.target.value)}>
+        <Select
+          value={category}
+          onChange={(event) => setCategory(event.target.value)}
+        >
           <option value="">Categoria</option>
           <option value="instagram">Instagram</option>
           <option value="discord">Discord</option>
