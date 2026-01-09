@@ -5,6 +5,12 @@ const app = express()
 
 app.use(express.json())
 
+app.use((_request, response, next) => {
+  response.setHeader('Access-Control-Allow-Origin', '*')
+
+  next()
+})
+
 app.use(router)
 
 app.use((error, _request, response, _next) => {

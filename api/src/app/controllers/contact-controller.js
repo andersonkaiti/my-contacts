@@ -1,23 +1,10 @@
 import { contactRepository } from '../repositories/contact-repository.js'
 
-// SOP -> Same Origin Policy -> Política de mesma origem
-// CORS -> Cross-Origin Resource Sharing -> Compartilhamento de recursos entre origens cruzadas
-// Origem: protocolo://domínio:porta
-
-//   Saída: http://localhost:3000
-// Destino: http://localhost:3001
-
-// Enquanto o SOP bloqueia a requisições cross-origin, o CORS flexibiliza essa restrição, permitindo que a requisição seja feita
-
 class ContactController {
   async index(request, response) {
     const { orderBy } = request.query
 
     const contacts = await contactRepository.findAll(orderBy)
-
-    //  Wildcard -> Curinga -> É uma carta que representa qualquer carta (origem)
-    // O CORS é um header definido na resposta da api
-    response.setHeader('Access-Control-Allow-Origin', '*')
 
     response.status(200).json(contacts)
   }
