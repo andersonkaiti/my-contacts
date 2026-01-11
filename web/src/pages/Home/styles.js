@@ -51,25 +51,27 @@ export const Header = styled.header`
   `}
 `
 
-export const ListContainer = styled.div`
-  ${({ theme }) => css`
+export const ListHeader = styled.header`
+  ${({ theme, orderBy }) => css`
     margin-top: 24px;
+    margin-bottom: 8px;
 
-    header {
-      margin-bottom: 8px;
+    button {
+      background: transparent;
+      border: none;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
 
-      button {
-        background: transparent;
-        border: none;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
+      span {
+        margin-right: 8px;
+        font-weight: bold;
+        color: ${theme.colors.primary.main}
+      }
 
-        span {
-          margin-right: 8px;
-          font-weight: bold;
-          color: ${theme.colors.primary.main}
-        }
+      img {
+        transform: ${orderBy === 'asc' ? 'rotate(180deg)' : 'rotate(0deg)'};
+        transition: transform .2s ease-in;
       }
     }
   `}

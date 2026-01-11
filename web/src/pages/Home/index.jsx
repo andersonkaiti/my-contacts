@@ -9,20 +9,28 @@ import {
   Container,
   Header,
   InputSearchContainer,
-  ListContainer,
+  ListHeader,
 } from './styles'
 
 export function Home() {
   const [contacts, setContacts] = useState([])
+  const [orderBy, setOrderBy] = useState('asc')
 
   useEffect(() => {
-    fetch('http://localhost:3001/contacts')
+    const url = new URL('http://localhost:3001/contacts')
+    url.searchParams.set('orderBy', orderBy)
+
+    fetch(url)
       .then(async (response) => {
         const data = await response.json()
         setContacts(data)
       })
       .catch((error) => console.error(error))
-  }, [])
+  }, [orderBy])
+
+  function handleToggleOrderBy() {
+    setOrderBy((prevState) => (prevState === 'asc' ? 'desc' : 'asc'))
+  }
 
   return (
     <Container>
@@ -38,16 +46,13 @@ export function Home() {
         <Link to="/new">Novo contato</Link>
       </Header>
 
-      <ListContainer>
-        <header>
-          <button type="button" className="sort-button">
-            <span>Nome</span>
-            <img src={arrow} alt="Arrow" />
-          </button>
-        </header>
-      </ListContainer>
+      <ListHeader orderBy={orderBy}>
+        <button type="button" onClick={handleToggleOrderBy}>
+          <span>Nome</span>
+          <img src={arrow} alt="Arrow" />
+        </button>
+      </ListHeader>
 
-      {/* Quando um array é adicionado, o React entende que deve renderizar cada item do array. Por conta disso, a transformação de um array de objetos em um array de componentes JSX é feita: */}
       {contacts.map((contact) => (
         <Card key={contact.id}>
           <div className="info">
