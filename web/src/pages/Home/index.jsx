@@ -27,18 +27,25 @@ export function Home() {
     [contacts, searchTerm],
   )
 
+  // A função de efeito sempre deve ser síncrona, pois se ela for assíncrona a execução do cleanup também será assíncrona, o que pode levar a problemas de memória, pois o React não espera que a função de cleanup seja assíncrona
   useEffect(() => {
-    const url = new URL('http://localhost:3001/contacts')
-    url.searchParams.set('orderBy', orderBy)
+    // Mas é possível chamar uma função assíncrona dentro da função de efeito
+    async function loadContacts() {
+      try {
+        const url = new URL('http://localhost:3001/contacts')
+        url.searchParams.set('orderBy', orderBy)
 
-    fetch(url)
-      .then(async (response) => {
         startTransition(async () => {
+          const response = await fetch(url)
           const data = await response.json()
           setContacts(data)
         })
-      })
-      .catch((error) => console.error(error))
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    loadContacts()
   }, [orderBy])
 
   function handleToggleOrderBy() {
