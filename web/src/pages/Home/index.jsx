@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useTransition } from 'react'
 import { Link } from 'react-router-dom'
 import arrow from '../../assets/images/icons/arrow.svg'
 import edit from '../../assets/images/icons/edit.svg'
 import trash from '../../assets/images/icons/trash.svg'
+import { Loader } from '../../components/Loader'
 import { formatPhone } from '../../utils/formatPhone'
 import {
   Card,
@@ -16,6 +17,7 @@ export function Home() {
   const [contacts, setContacts] = useState([])
   const [orderBy, setOrderBy] = useState('asc')
   const [searchTerm, setSearchTerm] = useState('')
+  const [isLoading, startTransition] = useTransition()
 
   const filteredContacts = useMemo(
     () =>
@@ -31,8 +33,10 @@ export function Home() {
 
     fetch(url)
       .then(async (response) => {
-        const data = await response.json()
-        setContacts(data)
+        startTransition(async () => {
+          const data = await response.json()
+          setContacts(data)
+        })
       })
       .catch((error) => console.error(error))
   }, [orderBy])
@@ -47,6 +51,8 @@ export function Home() {
 
   return (
     <Container>
+      <Loader isLoading={isLoading} />
+
       <InputSearchContainer>
         <input
           type="text"
