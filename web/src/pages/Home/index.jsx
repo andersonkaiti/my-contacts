@@ -4,6 +4,7 @@ import arrow from '../../assets/images/icons/arrow.svg'
 import edit from '../../assets/images/icons/edit.svg'
 import trash from '../../assets/images/icons/trash.svg'
 import { Loader } from '../../components/Loader'
+import { contactService } from '../../services/contactsService'
 import { formatPhone } from '../../utils/formatPhone'
 import {
   Card,
@@ -27,17 +28,11 @@ export function Home() {
     [contacts, searchTerm],
   )
 
-  // A função de efeito sempre deve ser síncrona, pois se ela for assíncrona a execução do cleanup também será assíncrona, o que pode levar a problemas de memória, pois o React não espera que a função de cleanup seja assíncrona
   useEffect(() => {
-    // Mas é possível chamar uma função assíncrona dentro da função de efeito
     async function loadContacts() {
       try {
-        const url = new URL('http://localhost:3001/contacts')
-        url.searchParams.set('orderBy', orderBy)
-
         startTransition(async () => {
-          const response = await fetch(url)
-          const data = await response.json()
+          const data = await contactService.listContacts(orderBy)
           setContacts(data)
         })
       } catch (error) {
