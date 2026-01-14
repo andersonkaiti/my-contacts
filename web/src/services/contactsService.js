@@ -1,11 +1,17 @@
+import { HttpClient } from './utils/httpClient'
+
 class ContactsService {
+  constructor() {
+    this.httpClient = new HttpClient('http://localhost:3001')
+  }
+
   async listContacts(orderBy = 'asc') {
-    const url = new URL('http://localhost:3001/contacts')
-    url.searchParams.set('orderBy', orderBy)
-
-    const response = await fetch(url)
-
-    return response.json()
+    return this.httpClient.get({
+      path: '/contacts',
+      searchParams: {
+        orderBy,
+      },
+    })
   }
 }
 
