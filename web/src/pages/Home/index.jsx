@@ -30,14 +30,14 @@ export function Home() {
 
   useEffect(() => {
     async function loadContacts() {
-      try {
-        startTransition(async () => {
-          const data = await contactService.listContacts(orderBy)
+      startTransition(async () => {
+        try {
+          const data = await contactService.listContacts(orderBy) 
           setContacts(data)
-        })
-      } catch (error) {
-        console.error(error)
-      }
+        } catch (error) {
+          console.error(error)
+        }
+      })
     }
 
     loadContacts()
