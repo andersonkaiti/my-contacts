@@ -1,3 +1,5 @@
+import { APIError } from '../../errors/apiError'
+
 class HttpClient {
   constructor(baseURL) {
     this.baseURL = baseURL
@@ -16,7 +18,6 @@ class HttpClient {
 
     let data = null
 
-    // Headers são case insensitive
     const contentType = response.headers.get('content-type')
 
     if (contentType.includes('application/json')) {
@@ -24,9 +25,7 @@ class HttpClient {
     }
 
     if (!response.ok) {
-      throw new Error(
-        data?.error || `${response.status} ${response.statusText}`,
-      )
+      throw new APIError(response, data)
     }
 
     return data

@@ -4,6 +4,7 @@ import arrow from '../../assets/images/icons/arrow.svg'
 import edit from '../../assets/images/icons/edit.svg'
 import trash from '../../assets/images/icons/trash.svg'
 import { Loader } from '../../components/Loader'
+import { APIError } from '../../errors/apiError'
 import { contactService } from '../../services/contactsService'
 import { formatPhone } from '../../utils/formatPhone'
 import {
@@ -32,10 +33,19 @@ export function Home() {
     async function loadContacts() {
       startTransition(async () => {
         try {
-          const data = await contactService.listContacts(orderBy) 
+          const data = await contactService.listContacts(orderBy)
           setContacts(data)
         } catch (error) {
-          console.error(error)
+          if (error instanceof APIError) {
+            // Benefícios de um erro customizado:
+            // - Exibe uma mensagem para o usuário com o nome do erro
+            // - É possível enviá-lo para um serviço de logging
+            // - É possível adicionar novas propriedades/métodos
+            console.error(error)
+            console.log(error.name)
+            console.log(error.response)
+            console.log(error.data)
+          }
         }
       })
     }
