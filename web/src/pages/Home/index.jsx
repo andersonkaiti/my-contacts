@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useTransition } from 'react'
+import { useCallback, useEffect, useMemo, useState, useTransition } from 'react'
 import { Link } from 'react-router-dom'
 import arrow from '../../assets/images/icons/arrow.svg'
 import edit from '../../assets/images/icons/edit.svg'
@@ -32,7 +32,11 @@ export function Home() {
     [contacts, searchTerm],
   )
 
-  async function loadContacts() {
+  // A cada renderização, a função loadContacts é recriada.
+  // Então caso o setContacts seja chamado, a função loadContacts será recriada
+  // Durante a re-renderização, o useEffect irá chamar a função loadContacts,
+  // que irá chamar o setContacts novamente e isso causará um loop infinito
+  const loadContacts = useCallback(async () => {
     startTransition(async () => {
       try {
         const data = await contactService.listContacts(orderBy)
@@ -42,11 +46,11 @@ export function Home() {
         setHasError(true)
       }
     })
-  }
+  }, [orderBy])
 
   useEffect(() => {
     loadContacts()
-  }, [orderBy])
+  }, [loadContacts])
 
   function handleToggleOrderBy() {
     setOrderBy((prevState) => (prevState === 'asc' ? 'desc' : 'asc'))
