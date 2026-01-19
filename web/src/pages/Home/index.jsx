@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, useTransition } from 'react'
+import { useEffect, useMemo, useState, useTransition } from 'react'
 import { Link } from 'react-router-dom'
 import arrow from '../../assets/images/icons/arrow.svg'
 import edit from '../../assets/images/icons/edit.svg'
@@ -17,6 +17,39 @@ import {
   ListHeader,
 } from './styles'
 
+/**
+  No código-fonte do React, as funções com mount são executadas durante o
+  primeiro uso do hook, enquanto as funções com update são executadas durante
+  a atualização do hook.
+
+  As funções mount dos hooks useCallback e do useMemo são parecidas:
+  Enquanto o useCallback memoiza uma função, o useMemo executa a função
+  callback recebida e memoiza o valor retornado. Portanto, é possível utilizar
+  o useMemo para memoizar uma função simplesmente passando uma função callback
+  que retorna a função que se deseja memoizar.
+
+  É melhor utilizar o useCallback, pois é necessário ter um tempo de espera
+  para que o useMemo execute a função callback recebida.
+ 
+  function mountCallback(callback, deps) {
+    const hook = mountWorkInProgressHook()
+    const nextDeps = deps === undefined ? null : deps
+    hook.memoizedState = [callback, nextDeps]
+    return callback
+  }
+
+  function mountMemo(
+    nextCreate,
+    deps,
+  ) {
+    const hook = mountWorkInProgressHook()
+    const nextDeps = deps === undefined ? null : deps
+    const nextValue = nextCreate()
+    hook.memoizedState = [nextValue, nextDeps]
+    return nextValue
+  }
+ */
+
 export function Home() {
   const [contacts, setContacts] = useState([])
   const [orderBy, setOrderBy] = useState('asc')
@@ -32,20 +65,18 @@ export function Home() {
     [contacts, searchTerm],
   )
 
-  // A cada renderização, a função loadContacts é recriada.
-  // Então caso o setContacts seja chamado, a função loadContacts será recriada
-  // Durante a re-renderização, o useEffect irá chamar a função loadContacts,
-  // que irá chamar o setContacts novamente e isso causará um loop infinito
-  const loadContacts = useCallback(async () => {
-    startTransition(async () => {
-      try {
-        const data = await contactService.listContacts(orderBy)
-        setContacts(data)
-        setHasError(false)
-      } catch {
-        setHasError(true)
-      }
-    })
+  const loadContacts = useMemo(() => {
+    return async () => {
+      startTransition(async () => {
+        try {
+          const data = await contactService.listContacts(orderBy)
+          setContacts(data)
+          setHasError(false)
+        } catch {
+          setHasError(true)
+        }
+      })
+    }
   }, [orderBy])
 
   useEffect(() => {
