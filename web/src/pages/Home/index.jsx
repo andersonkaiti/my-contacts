@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState, useTransition } from 'react'
+import { useCallback, useEffect, useMemo, useState, useTransition } from 'react'
 import { Link } from 'react-router-dom'
+import emptyBox from '../../assets/images/empty-box.svg'
 import arrow from '../../assets/images/icons/arrow.svg'
 import edit from '../../assets/images/icons/edit.svg'
 import trash from '../../assets/images/icons/trash.svg'
@@ -11,44 +12,12 @@ import { formatPhone } from '../../utils/formatPhone'
 import {
   Card,
   Container,
+  EmptyListContainer,
   ErrorContainer,
   Header,
   InputSearchContainer,
   ListHeader,
 } from './styles'
-
-/**
-  No código-fonte do React, as funções com mount são executadas durante o
-  primeiro uso do hook, enquanto as funções com update são executadas durante
-  a atualização do hook.
-
-  As funções mount dos hooks useCallback e do useMemo são parecidas:
-  Enquanto o useCallback memoiza uma função, o useMemo executa a função
-  callback recebida e memoiza o valor retornado. Portanto, é possível utilizar
-  o useMemo para memoizar uma função simplesmente passando uma função callback
-  que retorna a função que se deseja memoizar.
-
-  É melhor utilizar o useCallback, pois é necessário ter um tempo de espera
-  para que o useMemo execute a função callback recebida.
- 
-  function mountCallback(callback, deps) {
-    const hook = mountWorkInProgressHook()
-    const nextDeps = deps === undefined ? null : deps
-    hook.memoizedState = [callback, nextDeps]
-    return callback
-  }
-
-  function mountMemo(
-    nextCreate,
-    deps,
-  ) {
-    const hook = mountWorkInProgressHook()
-    const nextDeps = deps === undefined ? null : deps
-    const nextValue = nextCreate()
-    hook.memoizedState = [nextValue, nextDeps]
-    return nextValue
-  }
- */
 
 export function Home() {
   const [contacts, setContacts] = useState([])
@@ -65,18 +34,16 @@ export function Home() {
     [contacts, searchTerm],
   )
 
-  const loadContacts = useMemo(() => {
-    return async () => {
-      startTransition(async () => {
-        try {
-          const data = await contactService.listContacts(orderBy)
-          setContacts(data)
-          setHasError(false)
-        } catch {
-          setHasError(true)
-        }
-      })
-    }
+  const loadContacts = useCallback(async () => {
+    startTransition(async () => {
+      try {
+        const data = await contactService.listContacts(orderBy)
+        setContacts(data)
+        setHasError(false)
+      } catch {
+        setHasError(true)
+      }
+    })
   }, [orderBy])
 
   useEffect(() => {
@@ -99,17 +66,27 @@ export function Home() {
     <Container>
       <Loader isLoading={isLoading} />
 
-      <InputSearchContainer>
-        <input
-          type="text"
-          placeholder="Pesquisar contato..."
-          value={searchTerm}
-          onChange={handleSearchTermChange}
-        />
-      </InputSearchContainer>
+      {contacts.length > 0 && (
+        <InputSearchContainer>
+          <input
+            type="text"
+            placeholder="Pesquisar contato..."
+            value={searchTerm}
+            onChange={handleSearchTermChange}
+          />
+        </InputSearchContainer>
+      )}
 
-      <Header hasError={hasError}>
-        {!hasError && (
+      <Header
+        justifyContent={
+          hasError
+            ? 'flex-end'
+            : contacts.length > 0
+              ? 'space-between'
+              : 'center'
+        }
+      >
+        {!hasError && contacts.length > 0 && (
           <strong>
             {filteredContacts.length}{' '}
             {filteredContacts.length === 1 ? 'contato' : 'contatos'}
@@ -134,6 +111,18 @@ export function Home() {
 
       {!hasError && (
         <>
+          {contacts.length < 1 && !isLoading && (
+            <EmptyListContainer>
+              <img src={emptyBox} alt="Empty Box" />
+
+              <p>
+                Você ainda não tem nenhum contato cadastrado! Clique no botão{' '}
+                <strong>"Novo contato"</strong> à cima para cadastrar o seu
+                primeiro!
+              </p>
+            </EmptyListContainer>
+          )}
+
           {filteredContacts.length > 0 && (
             <ListHeader orderBy={orderBy}>
               <button type="button" onClick={handleToggleOrderBy}>
