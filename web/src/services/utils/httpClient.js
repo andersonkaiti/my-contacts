@@ -5,7 +5,7 @@ class HttpClient {
     this.baseURL = baseURL
   }
 
-  async get({ path, searchParams }) {
+  async get({ path, searchParams = {} }) {
     const url = new URL(this.baseURL)
 
     url.pathname = path
