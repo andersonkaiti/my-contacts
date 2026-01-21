@@ -18,5 +18,10 @@ export const Select = styled.select`
     &:focus {
       border-color: ${theme.colors.primary.main};
     }
+
+    &:disabled {
+      background: ${theme.colors.gray[100]};
+      border-color: ${theme.colors.gray[200]};
+    }
   `}
 `

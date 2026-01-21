@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useTransition } from 'react'
 import { useErrors } from '../../hooks/useErrors'
 import { categoriesService } from '../../services/categoriesService'
 import { formatPhone } from '../../utils/formatPhone'
@@ -15,6 +15,7 @@ export function ContactForm({ buttonLabel }) {
   const [phone, setPhone] = useState('')
   const [categoryId, setCategoryId] = useState('')
   const [categories, setCategories] = useState([])
+  const [isLoadingCategories, startCategoriesTransition] = useTransition()
 
   const { setError, removeError, getErrorMessageByFieldName, errors } =
     useErrors()
@@ -23,11 +24,13 @@ export function ContactForm({ buttonLabel }) {
 
   useEffect(() => {
     async function loadCategories() {
-      try {
-        const data = await categoriesService.listCategories()
+      startCategoriesTransition(async () => {
+        try {
+          const data = await categoriesService.listCategories()
 
-        setCategories(data)
-      } catch {}
+          setCategories(data)
+        } catch {}
+      })
     }
 
     loadCategories()
@@ -106,10 +109,11 @@ export function ContactForm({ buttonLabel }) {
         />
       </FormGroup>
 
-      <FormGroup>
+      <FormGroup isLoading={isLoadingCategories}>
         <Select
           value={categoryId}
           onChange={(event) => setCategoryId(event.target.value)}
+          disabled={isLoadingCategories}
         >
           <option value="">Sem categoria</option>
           {categories.map((category) => (
