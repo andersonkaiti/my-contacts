@@ -13,6 +13,13 @@ class ContactsService {
       },
     })
   }
+
+  async createContact(contact) {
+    return this.httpClient.post({
+      path: '/contacts',
+      body: contact,
+    })
+  }
 }
 
 export const contactService = new ContactsService()

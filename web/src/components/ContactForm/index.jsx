@@ -9,7 +9,7 @@ import { Input } from '../Input'
 import { Select } from '../Select'
 import { ButtonContainer, Form } from './styles'
 
-export function ContactForm({ buttonLabel }) {
+export function ContactForm({ buttonLabel, onSubmit }) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
@@ -71,11 +71,11 @@ export function ContactForm({ buttonLabel }) {
   function handleSubmit(event) {
     event.preventDefault()
 
-    console.log({
+    onSubmit({
       name,
       email,
-      phone: phone.replace(/\D/g, ''),
-      category: categoryId,
+      phone,
+      categoryId,
     })
   }
 
