@@ -4,6 +4,7 @@ import { GlobalStyle } from '../../assets/styles/global'
 import defaultTheme from '../../assets/styles/themes/default'
 import { Routes } from '../../Routes'
 import { Header } from '../Header'
+import { ToastContainer } from '../Toast/ToastContainer'
 import { Container } from './styles'
 
 export function App() {
@@ -11,6 +12,8 @@ export function App() {
     <BrowserRouter>
       <ThemeProvider theme={defaultTheme}>
         <GlobalStyle />
+
+        <ToastContainer />
 
         <Container>
           <Header />
