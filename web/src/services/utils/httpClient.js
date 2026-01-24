@@ -39,9 +39,6 @@ class HttpClient {
 
     const headers = new Headers()
 
-    // É necessário verificar se o body existe, pois se a requisição for GET,
-    // ela deixará de ser uma requisição simples e o preflight request
-    // será feito, gerando uma requisição desnecessária
     if (options.body) {
       headers.set('Content-Type', 'application/json')
     }
