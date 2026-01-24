@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 
-export const Button = styled.button`
+export const StyledButton = styled.button`
   ${({ theme, danger }) => css`
     height: 52px;
     border: none;
@@ -12,6 +12,9 @@ export const Button = styled.button`
     color: #fff;
     border-radius: 4px;
     transition: background .2s ease-in;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &:hover {
       background: ${danger ? theme.colors.danger.light : theme.colors.primary.light};
