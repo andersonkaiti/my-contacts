@@ -1,6 +1,5 @@
 import ReactDOM from 'react-dom/client'
 import { App } from './components/App'
-import './lib/eventManager'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
