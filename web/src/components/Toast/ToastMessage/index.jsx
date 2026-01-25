@@ -1,8 +1,34 @@
+import { useEffect } from 'react'
 import checkCircleIcon from '../../../assets/images/icons/check-circle.svg'
 import xCircleIcon from '../../../assets/images/icons/x-circle.svg'
 import { Container } from './styles'
 
-export function ToastMessage({ message: { id, text, type }, onRemoveMessage }) {
+const ONE_SECOND = 1000
+const DEFAULT_TOAST_DURATION = 7 * ONE_SECOND
+
+// setTimeout(
+//   (number, array, object, string, fn) => {
+//     console.log({ number, array, object, string, fn })
+//   }, 1000, 1, ['posicao'], {}, 'valor', () => {},
+// )
+
+export function ToastMessage({
+  message: { id, text, type, duration = DEFAULT_TOAST_DURATION },
+  onRemoveMessage,
+}) {
+  useEffect(() => {
+    // Alternativa possível, mas não recomendada:
+    // const timeoutId = setTimeout(onRemoveMessage, duration, id)
+
+    const timeoutId = setTimeout(() => {
+      onRemoveMessage(id)
+    }, duration)
+
+    return () => {
+      clearTimeout(timeoutId)
+    }
+  }, [id, onRemoveMessage, duration])
+
   function handleRemoveToast() {
     onRemoveMessage(id)
   }
@@ -11,9 +37,7 @@ export function ToastMessage({ message: { id, text, type }, onRemoveMessage }) {
     <Container
       type={type}
       onClick={handleRemoveToast}
-      // A posição do elemento ao navegar com tab é 0 (primeira posição)
       tabIndex={0}
-      // Define o elemento como um botão
       role="button"
     >
       {type === 'danger' && <img src={xCircleIcon} alt="X" />}
