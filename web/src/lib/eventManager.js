@@ -20,20 +20,38 @@ export class EventManager {
       listener(payload)
     })
   }
+
+  removeListener(event, listenerToRemove) {
+    const listeners = this.listeners[event]
+
+    if (!listeners) {
+      return
+    }
+
+    this.listeners[event] = listeners.filter(
+      (listener) => listener !== listenerToRemove,
+    )
+  }
 }
 
 const toastEventManager = new EventManager()
 
-toastEventManager.on('addtoast', (payload) => {
+function addToast1(payload) {
   console.log('addtoast listener1', payload)
-})
-toastEventManager.on('addtoast', (payload) => {
+}
+
+function addToast2(payload) {
   console.log('addtoast listener2', payload)
-})
+}
+
+toastEventManager.on('addtoast', addToast1)
+toastEventManager.on('addtoast', addToast2)
 
 toastEventManager.emit('addtoast', {
   type: 'success',
   message: 'Contato salvo com sucesso!',
 })
 
-console.log(toastEventManager)
+toastEventManager.removeListener('addtoast', addToast1)
+
+toastEventManager.emit('addtoast', 'after remove listener')
