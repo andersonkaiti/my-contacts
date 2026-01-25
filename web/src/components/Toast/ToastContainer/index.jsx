@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { toastEventManager } from '../../../utils/toast'
 import { ToastMessage } from '../ToastMessage'
 import { Container } from './styles'
 
@@ -6,8 +7,8 @@ export function ToastContainer() {
   const [messages, setMessages] = useState([])
 
   useEffect(() => {
-    function handleAddToast() {
-      const { type, text } = event.detail
+    function handleAddToast(event) {
+      const { type, text } = event
 
       setMessages((prevMessages) => [
         ...prevMessages,
@@ -19,12 +20,10 @@ export function ToastContainer() {
       ])
     }
 
-    document.addEventListener('addtoast', handleAddToast)
+    toastEventManager.on('addtoast', handleAddToast)
 
-    // A função de cleanup é necessário para evitar execução de vários event
-    // listeners ao renderizar o componente novamente
     return () => {
-      document.removeEventListener('addtoast', handleAddToast)
+      toastEventManager.removeListener('addtoast', handleAddToast)
     }
   }, [])
 
