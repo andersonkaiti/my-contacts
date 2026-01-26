@@ -1,4 +1,10 @@
-import { useEffect, useState, useTransition } from 'react'
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+  useTransition,
+} from 'react'
 import { useErrors } from '../../hooks/useErrors'
 import { categoriesService } from '../../services/categoriesService'
 import { formatPhone } from '../../utils/formatPhone'
@@ -9,7 +15,7 @@ import { Input } from '../Input'
 import { Select } from '../Select'
 import { ButtonContainer, Form } from './styles'
 
-export function ContactForm({ buttonLabel, onSubmit }) {
+export const ContactForm = forwardRef(({ buttonLabel, onSubmit }, ref) => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
@@ -22,6 +28,30 @@ export function ContactForm({ buttonLabel, onSubmit }) {
     useErrors()
 
   const isFormValid = name && !errors.length
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      setFieldsValue: (values) => {
+        setName(values.name)
+        setEmail(values.email)
+        setPhone(values.phone)
+        setCategoryId(values.categoryId)
+      },
+    }),
+    [],
+  )
+
+  // useEffect(() => {
+  //   ref.current = {
+  //     setFieldsValue: (values) => {
+  //       setName(values.name)
+  //       setEmail(values.email)
+  //       setPhone(values.phone)
+  //       setCategoryId(values.categoryId)
+  //     },
+  //   }
+  // }, [ref])
 
   useEffect(() => {
     async function loadCategories() {
@@ -144,4 +174,4 @@ export function ContactForm({ buttonLabel, onSubmit }) {
       </ButtonContainer>
     </Form>
   )
-}
+})
