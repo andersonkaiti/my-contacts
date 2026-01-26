@@ -29,29 +29,24 @@ export const ContactForm = forwardRef(({ buttonLabel, onSubmit }, ref) => {
 
   const isFormValid = name && !errors.length
 
+  // falsy values: 0, NaN, false, null, undefined, ''
+  // Para lidar com valores falsy, usamos o operador || (logical OR operator)
+
+  // nullish values: null, undefined
+  // Para lidar com valores nullish, usamos o operador ?? (nullish coalescing operator)
+
   useImperativeHandle(
     ref,
     () => ({
       setFieldsValue: (values) => {
-        setName(values.name)
-        setEmail(values.email)
-        setPhone(values.phone)
-        setCategoryId(values.categoryId)
+        setName(values.name ?? '')
+        setEmail(values.email ?? '')
+        setPhone(formatPhone(values.phone ?? ''))
+        setCategoryId(values.category_id ?? '')
       },
     }),
     [],
   )
-
-  // useEffect(() => {
-  //   ref.current = {
-  //     setFieldsValue: (values) => {
-  //       setName(values.name)
-  //       setEmail(values.email)
-  //       setPhone(values.phone)
-  //       setCategoryId(values.categoryId)
-  //     },
-  //   }
-  // }, [ref])
 
   useEffect(() => {
     async function loadCategories() {
@@ -112,11 +107,6 @@ export const ContactForm = forwardRef(({ buttonLabel, onSubmit }, ref) => {
     })
 
     setIsSubmitting(false)
-
-    setName('')
-    setEmail('')
-    setPhone('')
-    setCategoryId('')
   }
 
   return (
