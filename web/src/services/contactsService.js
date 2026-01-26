@@ -28,6 +28,15 @@ class ContactsService {
       },
     })
   }
+
+  updateContact(id, contact) {
+    return this.httpClient.put({
+      path: `/contacts/${id}`,
+      options: {
+        body: contact,
+      },
+    })
+  }
 }
 
 export const contactService = new ContactsService()

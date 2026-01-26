@@ -20,7 +20,9 @@ export function EditContact() {
       startTransition(async () => {
         try {
           const data = await contactService.getContactById(id)
+
           contactFormRef.current.setFieldsValue(data)
+
           setContactName(data.name)
         } catch {
           toast({
@@ -35,7 +37,30 @@ export function EditContact() {
     loadContact()
   }, [id, history])
 
-  function handleSubmit() {}
+  async function handleSubmit(formData) {
+    try {
+      const contact = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone.replace(/\D/g, ''),
+        category_id: formData.categoryId,
+      }
+
+      const data = await contactService.updateContact(id, contact)
+
+      setContactName(data.name)
+
+      toast({
+        type: 'success',
+        text: 'Contato editado com sucesso!',
+      })
+    } catch {
+      toast({
+        type: 'danger',
+        text: 'Ocorreu um erro ao editar o contato!',
+      })
+    }
+  }
 
   return (
     <>

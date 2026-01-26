@@ -17,12 +17,12 @@ export function NewContact() {
 
       toast({
         type: 'success',
-        text: 'Contato cadastrado com sucesso',
+        text: 'Contato cadastrado com sucesso!',
       })
     } catch {
       toast({
         type: 'danger',
-        text: 'Ocorreu um erro ao cadastrar o contato',
+        text: 'Ocorreu um erro ao cadastrar o contato!',
       })
     }
   }

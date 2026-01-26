@@ -29,12 +29,6 @@ export const ContactForm = forwardRef(({ buttonLabel, onSubmit }, ref) => {
 
   const isFormValid = name && !errors.length
 
-  // falsy values: 0, NaN, false, null, undefined, ''
-  // Para lidar com valores falsy, usamos o operador || (logical OR operator)
-
-  // nullish values: null, undefined
-  // Para lidar com valores nullish, usamos o operador ?? (nullish coalescing operator)
-
   useImperativeHandle(
     ref,
     () => ({

@@ -16,12 +16,24 @@ class HttpClient {
     })
   }
 
-  post({ path, options = {}, searchParams = {} }) {
+  post({ path, searchParams = {}, options = {} }) {
     return this.makeRequest({
       path,
       searchParams,
       options: {
         method: 'POST',
+        body: options.body,
+        headers: options.headers,
+      },
+    })
+  }
+
+  put({ path, searchParams = {}, options = {} }) {
+    return this.makeRequest({
+      path,
+      searchParams,
+      options: {
+        method: 'PUT',
         body: options.body,
         headers: options.headers,
       },
