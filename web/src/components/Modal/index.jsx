@@ -10,7 +10,12 @@ export function Modal({
   confirmLabel = 'Confirmar',
   onCancel,
   onConfirm,
+  visible,
 }) {
+  if (!visible) {
+    return null
+  }
+
   return createPortal(
     <Overlay>
       <Container danger={danger}>
