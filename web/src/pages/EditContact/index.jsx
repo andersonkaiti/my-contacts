@@ -43,15 +43,8 @@ export function EditContact() {
     loadContact()
   }, [id, history, safeAsyncAction])
 
-  async function handleSubmit(formData) {
+  async function handleSubmit(contact) {
     try {
-      const contact = {
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone.replace(/\D/g, ''),
-        category_id: formData.categoryId,
-      }
-
       const data = await contactService.updateContact(id, contact)
 
       setContactName(data.name)

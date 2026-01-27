@@ -1,3 +1,4 @@
+import { contactMapper } from './mappers/contactMapper'
 import { HttpClient } from './utils/httpClient'
 
 class ContactsService {
@@ -21,19 +22,25 @@ class ContactsService {
   }
 
   createContact(contact) {
+    // O Data Mapper é implementado aqui para acoplar a lógica apenas no
+    // service, e não no componente de interface
+    const body = contactMapper.toPersistence(contact)
+
     return this.httpClient.post({
       path: '/contacts',
       options: {
-        body: contact,
+        body,
       },
     })
   }
 
   updateContact(id, contact) {
+    const body = contactMapper.toPersistence(contact)
+
     return this.httpClient.put({
       path: `/contacts/${id}`,
       options: {
-        body: contact,
+        body,
       },
     })
   }
