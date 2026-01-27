@@ -3,6 +3,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import { ContactForm } from '../../components/ContactForm'
 import { Loader } from '../../components/Loader'
 import { PageHeader } from '../../components/PageHeader'
+import { useSafeAsyncAction } from '../../hooks/useSafeAsyncAction'
 import { contactService } from '../../services/contactsService'
 import { toast } from '../../utils/toast'
 
@@ -15,27 +16,32 @@ export function EditContact() {
 
   const contactFormRef = useRef(null)
 
+  const safeAsyncAction = useSafeAsyncAction()
+
   useEffect(() => {
     async function loadContact() {
       startTransition(async () => {
         try {
           const data = await contactService.getContactById(id)
 
-          contactFormRef.current.setFieldsValue(data)
-
-          setContactName(data.name)
-        } catch {
-          toast({
-            type: 'danger',
-            text: 'Contato não encontrado!',
+          safeAsyncAction(() => {
+            contactFormRef.current.setFieldsValue(data)
+            setContactName(data.name)
           })
-          history.push('/')
+        } catch {
+          safeAsyncAction(() => {
+            toast({
+              type: 'danger',
+              text: 'Contato não encontrado!',
+            })
+            history.push('/')
+          })
         }
       })
     }
 
     loadContact()
-  }, [id, history])
+  }, [id, history, safeAsyncAction])
 
   async function handleSubmit(formData) {
     try {
