@@ -1,4 +1,4 @@
-import { createPortal } from 'react-dom'
+import { ReactPortal } from '../ReactPortal'
 import { Spinner } from '../Spinner'
 import { Overlay } from './styles'
 
@@ -7,10 +7,11 @@ export function Loader({ isLoading }) {
     return null
   }
 
-  return createPortal(
-    <Overlay>
-      <Spinner size={90} />
-    </Overlay>,
-    document.body,
+  return (
+    <ReactPortal>
+      <Overlay>
+        <Spinner size={90} />
+      </Overlay>
+    </ReactPortal>
   )
 }
