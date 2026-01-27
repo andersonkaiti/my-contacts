@@ -6,9 +6,16 @@ export function Button({
   disabled = false,
   isLoading = false,
   children,
+  danger = false,
+  onClick,
 }) {
   return (
-    <StyledButton type={type} disabled={disabled || isLoading}>
+    <StyledButton
+      type={type}
+      disabled={disabled || isLoading}
+      danger={danger}
+      onClick={onClick}
+    >
       {!isLoading && children}
       {isLoading && <Spinner size={16} />}
     </StyledButton>

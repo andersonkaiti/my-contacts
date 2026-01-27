@@ -8,6 +8,7 @@ import magnifierQuestion from '../../assets/images/magnifier-question.svg'
 import sad from '../../assets/images/sad.svg'
 import { Button } from '../../components/Button'
 import { Loader } from '../../components/Loader'
+import { Modal } from '../../components/Modal'
 import { contactService } from '../../services/contactsService'
 import { formatPhone } from '../../utils/formatPhone'
 import {
@@ -66,6 +67,17 @@ export function Home() {
 
   return (
     <Container>
+      <Modal
+        danger
+        title='Tem certeza que deseja remover o contato "Anderson Kaiti"?'
+        confirmLabel="Deletar"
+        onCancel={() => alert('Cancelou')}
+        onConfirm={() => alert('Confirmou')}
+      >
+        <h1>Título</h1>
+        <p>Corpo do modal</p>
+      </Modal>
+
       <Loader isLoading={isLoading} />
 
       {contacts.length > 0 && (
