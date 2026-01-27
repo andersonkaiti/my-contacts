@@ -11,6 +11,7 @@ import { Loader } from '../../components/Loader'
 import { Modal } from '../../components/Modal'
 import { contactService } from '../../services/contactsService'
 import { formatPhone } from '../../utils/formatPhone'
+import { toast } from '../../utils/toast'
 import {
   Card,
   Container,
@@ -26,8 +27,11 @@ export function Home() {
   const [contacts, setContacts] = useState([])
   const [orderBy, setOrderBy] = useState('asc')
   const [searchTerm, setSearchTerm] = useState('')
+
   const [isLoading, startTransition] = useTransition()
   const [hasError, setHasError] = useState(false)
+
+  const [isDeleting, startDeletingTransition] = useTransition()
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
   const [contactBeingDeleted, setContactBeingDeleted] = useState(null)
 
@@ -74,10 +78,31 @@ export function Home() {
 
   function handleCloseDeleteModal() {
     setIsDeleteModalVisible(false)
+    setContactBeingDeleted(null)
   }
 
-  function handleConfirmDeleteContact() {
-    console.timeLog(contactBeingDeleted.id)
+  async function handleConfirmDeleteContact() {
+    startDeletingTransition(async () => {
+      try {
+        await contactService.deleteContact(contactBeingDeleted.id)
+
+        setContacts((prevState) =>
+          prevState.filter((contact) => contact.id !== contactBeingDeleted.id),
+        )
+
+        handleCloseDeleteModal()
+
+        toast({
+          type: 'success',
+          text: 'Contato deletado com sucesso!',
+        })
+      } catch {
+        toast({
+          type: 'danger',
+          text: 'Ocorreu um erro ao deletar contato!',
+        })
+      }
+    })
   }
 
   return (
@@ -89,6 +114,7 @@ export function Home() {
         onCancel={handleCloseDeleteModal}
         onConfirm={handleConfirmDeleteContact}
         visible={isDeleteModalVisible}
+        isLoading={isDeleting}
       >
         <p>Esta ação não poderá ser desfeita!</p>
       </Modal>

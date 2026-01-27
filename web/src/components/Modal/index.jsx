@@ -11,6 +11,7 @@ export function Modal({
   onCancel,
   onConfirm,
   visible,
+  isLoading,
 }) {
   if (!visible) {
     return null
@@ -24,11 +25,21 @@ export function Modal({
         <div className="modal-body">{children}</div>
 
         <Footer>
-          <button type="button" className="cancel-button" onClick={onCancel}>
+          <button
+            type="button"
+            className="cancel-button"
+            onClick={onCancel}
+            disabled={isLoading}
+          >
             {cancelLabel}
           </button>
 
-          <Button type="button" danger={danger} onClick={onConfirm}>
+          <Button
+            type="button"
+            danger={danger}
+            onClick={onConfirm}
+            isLoading={isLoading}
+          >
             {confirmLabel}
           </Button>
         </Footer>

@@ -43,5 +43,9 @@ export const Footer = styled.footer`
     background: transparent;
     border: none;
     color: ${({ theme }) => theme.colors.gray[200]};
+
+    &:disabled {
+      cursor: default;
+    }
   }
 `

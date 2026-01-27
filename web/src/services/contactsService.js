@@ -37,6 +37,12 @@ class ContactsService {
       },
     })
   }
+
+  deleteContact(id) {
+    return this.httpClient.delete({
+      path: `/contacts/${id}`,
+    })
+  }
 }
 
 export const contactService = new ContactsService()

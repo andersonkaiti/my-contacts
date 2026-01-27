@@ -40,6 +40,17 @@ class HttpClient {
     })
   }
 
+  delete({ path, searchParams = {}, options = {} }) {
+    return this.makeRequest({
+      path,
+      searchParams,
+      options: {
+        method: 'DELETE',
+        headers: options.headers,
+      },
+    })
+  }
+
   async makeRequest({ path, searchParams, options }) {
     const url = new URL(this.baseURL)
 
@@ -71,7 +82,7 @@ class HttpClient {
 
     const contentType = response.headers.get('content-type')
 
-    if (contentType.includes('application/json')) {
+    if (contentType?.includes('application/json')) {
       data = await response.json()
     }
 
