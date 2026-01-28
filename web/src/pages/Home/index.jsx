@@ -1,4 +1,3 @@
-import { useCallback, useEffect, useMemo, useState, useTransition } from 'react'
 import { Link } from 'react-router-dom'
 import emptyBox from '../../assets/images/empty-box.svg'
 import arrow from '../../assets/images/icons/arrow.svg'
@@ -9,9 +8,7 @@ import sad from '../../assets/images/sad.svg'
 import { Button } from '../../components/Button'
 import { Loader } from '../../components/Loader'
 import { Modal } from '../../components/Modal'
-import { contactService } from '../../services/contactsService'
 import { formatPhone } from '../../utils/formatPhone'
-import { toast } from '../../utils/toast'
 import {
   Card,
   Container,
@@ -22,88 +19,26 @@ import {
   ListHeader,
   SearchNotFoundContainer,
 } from './styles'
+import { useHome } from './useHome'
 
 export function Home() {
-  const [contacts, setContacts] = useState([])
-  const [orderBy, setOrderBy] = useState('asc')
-  const [searchTerm, setSearchTerm] = useState('')
-
-  const [isLoading, startTransition] = useTransition()
-  const [hasError, setHasError] = useState(false)
-
-  const [isDeleting, startDeletingTransition] = useTransition()
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
-  const [contactBeingDeleted, setContactBeingDeleted] = useState(null)
-
-  const filteredContacts = useMemo(
-    () =>
-      contacts.filter((contact) =>
-        contact.name.toLowerCase().includes(searchTerm.toLowerCase()),
-      ),
-    [contacts, searchTerm],
-  )
-
-  const loadContacts = useCallback(async () => {
-    startTransition(async () => {
-      try {
-        const data = await contactService.listContacts(orderBy)
-        setContacts(data)
-        setHasError(false)
-      } catch {
-        setHasError(true)
-      }
-    })
-  }, [orderBy])
-
-  useEffect(() => {
-    loadContacts()
-  }, [loadContacts])
-
-  function handleToggleOrderBy() {
-    setOrderBy((prevState) => (prevState === 'asc' ? 'desc' : 'asc'))
-  }
-
-  function handleSearchTermChange(event) {
-    setSearchTerm(event.target.value)
-  }
-
-  function handleTryAgain() {
-    loadContacts()
-  }
-
-  function handleDeleteContact(contact) {
-    setContactBeingDeleted(contact)
-    setIsDeleteModalVisible(true)
-  }
-
-  function handleCloseDeleteModal() {
-    setIsDeleteModalVisible(false)
-    setContactBeingDeleted(null)
-  }
-
-  async function handleConfirmDeleteContact() {
-    startDeletingTransition(async () => {
-      try {
-        await contactService.deleteContact(contactBeingDeleted.id)
-
-        setContacts((prevState) =>
-          prevState.filter((contact) => contact.id !== contactBeingDeleted.id),
-        )
-
-        handleCloseDeleteModal()
-
-        toast({
-          type: 'success',
-          text: 'Contato deletado com sucesso!',
-        })
-      } catch {
-        toast({
-          type: 'danger',
-          text: 'Ocorreu um erro ao deletar contato!',
-        })
-      }
-    })
-  }
+  const {
+    contacts,
+    orderBy,
+    searchTerm,
+    filteredContacts,
+    isLoading,
+    hasError,
+    isDeleting,
+    isDeleteModalVisible,
+    contactBeingDeleted,
+    handleToggleOrderBy,
+    handleSearchTermChange,
+    handleTryAgain,
+    handleDeleteContact,
+    handleCloseDeleteModal,
+    handleConfirmDeleteContact,
+  } = useHome()
 
   return (
     <Container>

@@ -1,12 +1,11 @@
-import { useEffect, useRef, useState, useTransition } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { useSafeAsyncAction } from '../../hooks/useSafeAsyncAction'
 import { contactService } from '../../services/contactsService'
 import { toast } from '../../utils/toast'
-import { Presentation } from './presentation'
 
-export function Container() {
-  const [isLoading, startTransition] = useTransition()
+export function useEditContact() {
+  const [isLoading, setIsLoading] = useState(true)
   const { id } = useParams()
   const history = useHistory()
 
@@ -18,24 +17,23 @@ export function Container() {
 
   useEffect(() => {
     async function loadContact() {
-      startTransition(async () => {
-        try {
-          const data = await contactService.getContactById(id)
+      try {
+        const data = await contactService.getContactById(id)
 
-          safeAsyncAction(() => {
-            contactFormRef.current.setFieldsValue(data)
-            setContactName(data.name)
+        safeAsyncAction(() => {
+          contactFormRef.current.setFieldsValue(data)
+          setIsLoading(false)
+          setContactName(data.name)
+        })
+      } catch {
+        safeAsyncAction(() => {
+          toast({
+            type: 'danger',
+            text: 'Contato não encontrado!',
           })
-        } catch {
-          safeAsyncAction(() => {
-            toast({
-              type: 'danger',
-              text: 'Contato não encontrado!',
-            })
-            history.push('/')
-          })
-        }
-      })
+          history.push('/')
+        })
+      }
     }
 
     loadContact()
@@ -59,12 +57,10 @@ export function Container() {
     }
   }
 
-  return (
-    <Presentation
-      isLoading={isLoading}
-      contactName={contactName}
-      contactFormRef={contactFormRef}
-      onSubmit={handleSubmit}
-    />
-  )
+  return {
+    isLoading,
+    contactName,
+    handleSubmit,
+    contactFormRef,
+  }
 }
