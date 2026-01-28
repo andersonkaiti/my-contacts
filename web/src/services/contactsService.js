@@ -6,24 +6,26 @@ class ContactsService {
     this.httpClient = new HttpClient('http://localhost:3001')
   }
 
-  listContacts(orderBy = 'asc') {
-    return this.httpClient.get({
+  async listContacts(orderBy = 'asc') {
+    const contacts = await this.httpClient.get({
       path: '/contacts',
       searchParams: {
         orderBy,
       },
     })
+
+    return contacts.map(contactMapper.toDomain)
   }
 
-  getContactById(id) {
-    return this.httpClient.get({
+  async getContactById(id) {
+    const contact = await this.httpClient.get({
       path: `/contacts/${id}`,
     })
+
+    return contactMapper.toDomain(contact)
   }
 
   createContact(contact) {
-    // O Data Mapper é implementado aqui para acoplar a lógica apenas no
-    // service, e não no componente de interface
     const body = contactMapper.toPersistence(contact)
 
     return this.httpClient.post({

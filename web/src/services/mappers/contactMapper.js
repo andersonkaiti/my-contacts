@@ -1,10 +1,3 @@
-// Data Mapper Pattern:
-// Serve para transferir dados de forma bidirecional entre as camadas de domínio (origem)
-// e persistência (destino)
-// Front-end (origem) -> Back-end (destino)
-// Back-end (origem) -> Front-end (destino)
-// Back-end (origem) -> Banco de dados (destino)
-
 class ContactMapper {
   toPersistence(domainContact) {
     return {
@@ -16,9 +9,18 @@ class ContactMapper {
     }
   }
 
-  // toDomain(persistenceContact) {
-  //   return {}
-  // }
+  toDomain(persistenceContact) {
+    return {
+      id: persistenceContact.id,
+      name: persistenceContact.name,
+      email: persistenceContact.email,
+      phone: persistenceContact.phone,
+      category: {
+        id: persistenceContact.category_id,
+        name: persistenceContact.category_name,
+      },
+    }
+  }
 }
 
 export const contactMapper = new ContactMapper()
