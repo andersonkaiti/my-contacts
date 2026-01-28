@@ -28,11 +28,15 @@ export function Home() {
     handleConfirmDeleteContact,
   } = useHome()
 
+  const hasContacts = contacts.length > 0
+  const isListEmpty = !hasError && !isLoading && !hasContacts
+  const isSearchEmpty = !hasError && hasContacts && filteredContacts.length < 1
+
   return (
     <Container>
       <Loader isLoading={isLoading} />
 
-      {contacts.length > 0 && (
+      {hasContacts && (
         <InputSearch value={searchTerm} onChange={handleSearchTermChange} />
       )}
 
@@ -44,14 +48,12 @@ export function Home() {
 
       {hasError && <ErrorStatus onTryAgain={handleTryAgain} />}
 
-      {!hasError && (
+      {isListEmpty && <EmptyList />}
+
+      {isSearchEmpty && <SearchNotFound searchTerm={searchTerm} />}
+
+      {hasContacts && (
         <>
-          {contacts.length < 1 && !isLoading && <EmptyList />}
-
-          {contacts.length > 0 && filteredContacts.length < 1 && (
-            <SearchNotFound searchTerm={searchTerm} />
-          )}
-
           <ContactsList
             filteredContacts={filteredContacts}
             orderBy={orderBy}
