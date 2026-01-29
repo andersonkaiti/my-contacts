@@ -1,25 +1,23 @@
-import styled, { keyframes } from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 
 const fadeIn = keyframes`
-  from {
-    /* estilos iniciais */
-    opacity: 0;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
+`
 
-  to {
-    /* estilos finais */
-    opacity: 1;
-  }
+const fadeOut = keyframes`
+  from { opacity: 1; }
+  to { opacity: 0; }
 `
 
 const scaleIn = keyframes`
-  from {
-    transform: scale(0);
-  }
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+`
 
-  to {
-    transform: scale(1);
-  }
+const scaleOut = keyframes`
+  from { transform: scale(1); }
+  to { transform: scale(0); }
 `
 
 export const Overlay = styled.div`
@@ -33,6 +31,12 @@ export const Overlay = styled.div`
   align-items: center;
   justify-content: center;
   animation: ${fadeIn} .3s;
+
+  ${({ isLeaving }) =>
+    isLeaving &&
+    css`
+      animation: ${fadeOut} .2s forwards;
+    `}
 `
 
 export const Container = styled.div`
@@ -44,6 +48,12 @@ export const Container = styled.div`
   margin: 24px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.04);
   animation: ${scaleIn} .3s;
+
+  ${({ isLeaving }) =>
+    isLeaving &&
+    css`
+      animation: ${scaleOut} .2s forwards;
+    `}
 
   & > h1 {
     font-size: 22px;

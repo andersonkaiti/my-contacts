@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { Button } from '../Button'
 import { ReactPortal } from '../ReactPortal'
 import { Container, Footer, Overlay } from './styles'
@@ -13,14 +14,39 @@ export function Modal({
   visible,
   isLoading,
 }) {
-  if (!visible) {
+  const [shouldRender, setShouldRender] = useState(visible)
+  const overlayRef = useRef(null)
+
+  useEffect(() => {
+    if (visible) {
+      setShouldRender(true)
+    }
+
+    function handleAnimationEnd() {
+      setShouldRender(false)
+    }
+
+    const overlayElement = overlayRef.current
+
+    if (!visible && overlayElement) {
+      overlayElement.addEventListener('animationend', handleAnimationEnd)
+    }
+
+    return () => {
+      if (overlayElement) {
+        overlayElement.removeEventListener('animationend', handleAnimationEnd)
+      }
+    }
+  }, [visible])
+
+  if (!shouldRender) {
     return null
   }
 
   return (
     <ReactPortal>
-      <Overlay>
-        <Container danger={danger}>
+      <Overlay isLeaving={!visible} ref={overlayRef}>
+        <Container isLeaving={!visible} danger={danger}>
           <h1>{title}</h1>
 
           <div className="modal-body">{children}</div>
