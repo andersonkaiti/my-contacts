@@ -15,11 +15,21 @@ export function useAnimatedList(initialValue = []) {
     )
   }, [])
 
+  const renderList = useCallback(
+    (renderItem) =>
+      items.map((item) =>
+        renderItem(item, {
+          isLeaving: pendingRemovalItemIds.includes(item.id),
+          handleRemoveItem,
+          handleAnimationEnd,
+        }),
+      ),
+    [items, pendingRemovalItemIds, handleRemoveItem, handleAnimationEnd],
+  )
+
   return {
     items,
     setItems,
-    handleRemoveItem,
-    handleAnimationEnd,
-    pendingRemovalItemIds,
+    renderList,
   }
 }
