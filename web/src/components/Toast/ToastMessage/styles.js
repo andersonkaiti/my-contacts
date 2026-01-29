@@ -11,6 +11,17 @@ const messageIn = keyframes`
   }
 `
 
+const messageOut = keyframes`
+  from { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to { 
+    opacity: 0;
+    transform: translateY(100px);
+  }
+`
+
 const containerVariant = {
   default: css`
     background: ${({ theme }) => theme.colors.primary.main};
@@ -34,6 +45,12 @@ export const Container = styled.div`
   gap: 8px;
   cursor: pointer;
   animation: ${messageIn} .3s;
+
+  ${({ isLeaving }) =>
+    isLeaving &&
+    css`
+      animation: ${messageOut} .2s forwards;
+    `}
 
   ${({ type }) => containerVariant[type] || containerVariant.default}
 
