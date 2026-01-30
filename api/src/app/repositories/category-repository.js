@@ -8,7 +8,7 @@ class CategoryRepository {
           categories
         ORDER BY
           name
-      `
+      `,
     )
 
     return rows
@@ -24,7 +24,7 @@ class CategoryRepository {
         ORDER BY
           name
       `,
-      [id]
+      [id],
     )
 
     return rows
@@ -39,7 +39,7 @@ class CategoryRepository {
           $1
         ) RETURNING *
       `,
-      [name]
+      [name],
     )
 
     return row
@@ -56,7 +56,7 @@ class CategoryRepository {
           id = $2
         RETURNING *
       `,
-      [name, id]
+      [name, id],
     )
 
     return row
@@ -70,7 +70,7 @@ class CategoryRepository {
         WHERE
           id = $1
       `,
-      [id]
+      [id],
     )
 
     return deleteOp

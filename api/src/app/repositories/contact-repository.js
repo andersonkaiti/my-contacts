@@ -37,7 +37,7 @@ class ContactRepository {
         ORDER BY
           contacts.name
       `,
-      [id]
+      [id],
     )
 
     return row
@@ -51,7 +51,7 @@ class ContactRepository {
         WHERE
           email = $1
       `,
-      [email]
+      [email],
     )
 
     return row
@@ -72,7 +72,7 @@ class ContactRepository {
           $4
         ) RETURNING *
       `,
-      [name, email, phone, category_id]
+      [name, email, phone, category_id],
     )
 
     return row[0]
@@ -92,7 +92,7 @@ class ContactRepository {
           id = $5
         RETURNING *
       `,
-      [name, email, phone, category_id, id]
+      [name, email, phone, category_id, id],
     )
 
     return row
@@ -106,7 +106,7 @@ class ContactRepository {
         WHERE
           id = $1
       `,
-      [id]
+      [id],
     )
 
     return deleteOp
