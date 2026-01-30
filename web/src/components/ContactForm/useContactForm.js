@@ -1,4 +1,4 @@
-import { useEffect, useImperativeHandle, useState, useTransition } from 'react'
+import { useEffect, useImperativeHandle, useState } from 'react'
 import { useErrors } from '../../hooks/useErrors'
 import { categoriesService } from '../../services/categoriesService'
 import { formatPhone } from '../../utils/formatPhone'
@@ -10,7 +10,7 @@ export function useContactForm({ onSubmit, ref }) {
   const [phone, setPhone] = useState('')
   const [categoryId, setCategoryId] = useState('')
   const [categories, setCategories] = useState([])
-  const [isLoadingCategories, startCategoriesTransition] = useTransition()
+  const [isLoadingCategories, setIsLoadingCategories] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const { setError, removeError, getErrorMessageByFieldName, errors } =
@@ -39,13 +39,15 @@ export function useContactForm({ onSubmit, ref }) {
 
   useEffect(() => {
     async function loadCategories() {
-      startCategoriesTransition(async () => {
-        try {
-          const data = await categoriesService.listCategories()
+      setIsLoadingCategories(true)
+      try {
+        const data = await categoriesService.listCategories()
 
-          setCategories(data)
-        } catch {}
-      })
+        setCategories(data)
+      } catch {
+      } finally {
+        setIsLoadingCategories(false)
+      }
     }
 
     loadCategories()
