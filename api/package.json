@@ -7,11 +7,10 @@
     "dev": "node --env-file=.env --watch ."
   },
   "dependencies": {
-    "express": "^5.1.0",
-    "pg": "^8.16.3"
+    "express": "^5.2.1",
+    "pg": "^8.17.2"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.1.2",
-    "ultracite": "5.1.2"
+    "@biomejs/biome": "2.3.13"
   }
 }
