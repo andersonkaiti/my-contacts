@@ -10,25 +10,8 @@ export function ToastMessage({
   message: { id, text, type, duration = DEFAULT_TOAST_DURATION },
   onRemoveMessage,
   isLeaving,
-  onAnimationEnd,
   animatedRef,
 }) {
-  useEffect(() => {
-    function handleAnimationEnd() {
-      onAnimationEnd(id)
-    }
-
-    const animatedElement = animatedRef.current
-
-    if (isLeaving) {
-      animatedElement.addEventListener('animationend', handleAnimationEnd)
-    }
-
-    return () => {
-      animatedElement.removeEventListener('animationend', handleAnimationEnd)
-    }
-  }, [isLeaving, onAnimationEnd, id, animatedRef.current])
-
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       onRemoveMessage(id)
