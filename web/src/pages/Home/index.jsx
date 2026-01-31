@@ -18,10 +18,11 @@ export function Home() {
     isLoading,
     hasError,
     isDeleting,
+    isPending,
     isDeleteModalVisible,
     contactBeingDeleted,
     handleToggleOrderBy,
-    handleSearchTermChange,
+    handleChangeSearchTerm,
     handleTryAgain,
     handleDeleteContact,
     handleCloseDeleteModal,
@@ -37,7 +38,7 @@ export function Home() {
       <Loader isLoading={isLoading} />
 
       {hasContacts && (
-        <InputSearch value={searchTerm} onChange={handleSearchTermChange} />
+        <InputSearch value={searchTerm} onChange={handleChangeSearchTerm} />
       )}
 
       <Header
@@ -54,6 +55,8 @@ export function Home() {
 
       {hasContacts && (
         <>
+          {isPending && <p>Carregando...</p>}
+
           <ContactsList
             filteredContacts={filteredContacts}
             orderBy={orderBy}
