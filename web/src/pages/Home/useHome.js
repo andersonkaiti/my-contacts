@@ -1,36 +1,16 @@
-import { useCallback, useEffect, useState, useTransition } from 'react'
+import {
+  useCallback,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import { contactService } from '../../services/contactsService'
 import { toast } from '../../utils/toast'
-
-/**
-  React 17: a renderização é síncrona, ininterrupta e feita de uma só vez.
-  
-  React 18:
-  Concurrent React: é um mecanismo que roda por baixo dos panos e que permite
-  que o React gere múltiplas versões da UI ao mesmo tempo em background,
-  de forma assíncrona, sem bloquear a thread principal do navegador.
-
-  Exemplo: Primeiro o React atualiza o input de busca. Em seguida, renderiza
-  e atualiza a lista de contatos.
-
-  Urgent update e Transition update
-
-  Urgent update: é uma atualização que precisa ser renderizada imediatamente.
-  Transition update: é uma atualização pausada para dar espaço para uma urgent
-  update.
-
-  Toda atualização de estado é um urgent update, então não é necessário dizer
-  o que é urgente, mas sim o que é uma transição. Para isso, o React introduziu
-  o hook useTransition, que retorna um array com duas posições: o primeiro é um
-  valor stateful que indica que existe uma transição em progresso, e o segundo
-  é uma função que indica quais são as atualizações de UI que são transições a
-  partir de uma função de callback.
- */
 
 export function useHome() {
   const [contacts, setContacts] = useState([])
   const [orderBy, setOrderBy] = useState('asc')
-  const [searchTerm, setSearchTerm] = useState('')
 
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
@@ -39,17 +19,23 @@ export function useHome() {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false)
   const [contactBeingDeleted, setContactBeingDeleted] = useState(null)
 
-  const [filteredContacts, setFilteredContacts] = useState([])
+  const [searchTerm, setSearchTerm] = useState('')
 
-  const [isPending, startTransition] = useTransition()
+  // Permite que o valor apenas seja alterado depois de não haver mais nenhum
+  // urgent update, ou seja, permite que o React atualize a interface com o valor
+  // anterior enquanto o novo valor está sendo processado
+  const deferredSearchTerm = useDeferredValue(searchTerm)
 
-  // const filteredContacts = useMemo(
-  //   () =>
-  //     contacts.filter((contact) =>
-  //       contact.name.toLowerCase().includes(searchTerm.toLowerCase()),
-  //     ),
-  //   [contacts, searchTerm],
-  // )
+  // const [deferredSearchTerm, setDeferredSearchTerm] = useState('')
+  // const [isPending, startTransition] = useTransition()
+
+  const filteredContacts = useMemo(
+    () =>
+      contacts.filter((contact) =>
+        contact.name.toLowerCase().includes(deferredSearchTerm.toLowerCase()),
+      ),
+    [contacts, deferredSearchTerm],
+  )
 
   const loadContacts = useCallback(async () => {
     try {
@@ -58,7 +44,6 @@ export function useHome() {
       const data = await contactService.listContacts(orderBy)
 
       setContacts(data)
-      setFilteredContacts(data)
       setHasError(false)
     } catch {
       setHasError(true)
@@ -77,22 +62,7 @@ export function useHome() {
   }, [])
 
   function handleChangeSearchTerm(event) {
-    const { value } = event.target
-
-    // Neste caso, a cada digitação do usuário, o estado searchTerm é
-    // atualizado e, em seguida, o estado filteredContacts é atualizado.
-    // No entanto, como a atualização do estado filteredContacts é uma
-    // transição, ela é pausada/cancelada caso haja uma nova digitação do
-    // usuário, dando prioridade para a atualização do estado searchTerm
-    setSearchTerm(value)
-
-    startTransition(() => {
-      setFilteredContacts(
-        contacts.filter((contact) =>
-          contact.name.toLowerCase().includes(value.toLowerCase()),
-        ),
-      )
-    })
+    setSearchTerm(event.target.value)
   }
 
   function handleTryAgain() {
@@ -142,7 +112,6 @@ export function useHome() {
     isLoading,
     hasError,
     isDeleting,
-    isPending,
     isDeleteModalVisible,
     contactBeingDeleted,
     handleToggleOrderBy,

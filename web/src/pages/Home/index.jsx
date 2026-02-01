@@ -18,7 +18,6 @@ export function Home() {
     isLoading,
     hasError,
     isDeleting,
-    isPending,
     isDeleteModalVisible,
     contactBeingDeleted,
     handleToggleOrderBy,
@@ -55,8 +54,6 @@ export function Home() {
 
       {hasContacts && (
         <>
-          {isPending && <p>Carregando...</p>}
-
           <ContactsList
             filteredContacts={filteredContacts}
             orderBy={orderBy}
