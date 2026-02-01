@@ -12,6 +12,7 @@ class HttpClient {
       options: {
         method: 'GET',
         headers: options.headers,
+        signal: options.signal,
       },
     })
   }
@@ -24,6 +25,7 @@ class HttpClient {
         method: 'POST',
         body: options.body,
         headers: options.headers,
+        signal: options.signal,
       },
     })
   }
@@ -36,6 +38,7 @@ class HttpClient {
         method: 'PUT',
         body: options.body,
         headers: options.headers,
+        signal: options.signal,
       },
     })
   }
@@ -47,6 +50,7 @@ class HttpClient {
       options: {
         method: 'DELETE',
         headers: options.headers,
+        signal: options.signal,
       },
     })
   }
@@ -76,6 +80,7 @@ class HttpClient {
       method: options.method,
       headers,
       body: JSON.stringify(options.body),
+      signal: options.signal,
     })
 
     let data = null

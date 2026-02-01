@@ -31,24 +31,41 @@ export function useHome() {
     [contacts, deferredSearchTerm],
   )
 
-  const loadContacts = useCallback(async () => {
-    try {
-      setIsLoading(true)
+  const loadContacts = useCallback(
+    async (signal) => {
+      try {
+        setIsLoading(true)
 
-      const data = await contactService.listContacts(orderBy)
+        const data = await contactService.listContacts(orderBy, signal)
 
-      setContacts(data)
-      setHasError(false)
-    } catch {
-      setHasError(true)
-      setContacts([])
-    } finally {
-      setIsLoading(false)
-    }
-  }, [orderBy])
+        setContacts(data)
+        setHasError(false)
+      } catch (error) {
+        if (error instanceof DOMException && error.name === 'AbortError') {
+          return
+        }
+
+        setHasError(true)
+        setContacts([])
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    [orderBy],
+  )
 
   useEffect(() => {
-    loadContacts()
+    // O AbortController é um construtor nativo que permite abortar/cancelar
+    // uma ou mais requisições. Para prevenir a dupla requisição devido ao
+    // comportamento causado pelo StrictMode, usamos o AbortController no
+    // unmount, na função de cleanup do useEffect
+    const controller = new AbortController()
+
+    loadContacts(controller.signal)
+
+    return () => {
+      controller.abort()
+    }
   }, [loadContacts])
 
   const handleToggleOrderBy = useCallback(() => {
