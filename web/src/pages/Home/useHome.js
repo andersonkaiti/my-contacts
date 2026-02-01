@@ -21,13 +21,7 @@ export function useHome() {
 
   const [searchTerm, setSearchTerm] = useState('')
 
-  // Permite que o valor apenas seja alterado depois de não haver mais nenhum
-  // urgent update, ou seja, permite que o React atualize a interface com o valor
-  // anterior enquanto o novo valor está sendo processado
   const deferredSearchTerm = useDeferredValue(searchTerm)
-
-  // const [deferredSearchTerm, setDeferredSearchTerm] = useState('')
-  // const [isPending, startTransition] = useTransition()
 
   const filteredContacts = useMemo(
     () =>
