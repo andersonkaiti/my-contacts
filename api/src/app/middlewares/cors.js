@@ -6,9 +6,7 @@ const TWO_HOURS = ONE_HOUR * 2
 export function corsMiddleware(request, response, next) {
   const allowedOrigins = ['http://localhost:3000', 'http://localhost:3002']
 
-  // const origin = request.headers.origin -> case sensitive
-  // const origin = request.get('origin') // case insensitive
-  const origin = request.header('origin') // case insensitive
+  const origin = request.header('origin')
 
   const isAllowed = allowedOrigins.includes(origin)
 
