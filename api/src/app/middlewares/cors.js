@@ -4,7 +4,11 @@ const ONE_HOUR = ONE_MINUTE * 60
 const TWO_HOURS = ONE_HOUR * 2
 
 export function corsMiddleware(request, response, next) {
-  const allowedOrigins = ['http://localhost:3000', 'http://localhost:3002']
+  const allowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost:3002',
+    'https://mycontacts.andersonkaiti.com',
+  ]
 
   const origin = request.header('origin')
 
