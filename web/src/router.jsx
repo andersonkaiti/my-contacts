@@ -1,4 +1,4 @@
-import { useRoutes } from 'react-router-dom';
+import { useRoutes } from 'react-router-dom'
 import { EditContact } from './pages/EditContact'
 import { Home } from './pages/Home'
 import { NewContact } from './pages/NewContact'
