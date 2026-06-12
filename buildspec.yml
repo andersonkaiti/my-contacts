@@ -12,3 +12,8 @@ phases:
   build:
     commands:
       - cd $CODEBUILD_SRC_DIR/web && yarn build
+
+  post_build:
+    commands:
+      - aws s3 sync --delete $CODEBUILD_SRC_DIR/web/dist s3://${BUCKET_NAME}
+      - aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_ID} --paths /index.html
