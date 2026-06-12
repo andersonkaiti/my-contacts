@@ -7,8 +7,8 @@ phases:
 
   pre_build:
     commands:
-      - cd web && yarn install --frozen-lockfile
+      - cd $CODEBUILD_SRC_DIR/web && yarn install --frozen-lockfile
 
   build:
     commands:
-      - cd web && yarn build
+      - cd $CODEBUILD_SRC_DIR/web && yarn build
