@@ -7,8 +7,8 @@ phases:
 
   pre_build:
     commands:
-      - yarn install --lock-file
+      - cd web && yarn install --frozen-lockfile
 
   build:
     commands:
-      - yarn build
+      - cd web && yarn build
